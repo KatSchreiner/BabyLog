@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ProfileView.swift
 //  BabyLog
 //
 //  Created by Екатерина Шрайнер on 08.04.2026.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct ProfileView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
@@ -82,5 +82,5 @@ private let itemFormatter: DateFormatter = {
 }()
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ProfileView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
