@@ -14,7 +14,8 @@ struct BabyLogApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ProfileView()
+            OnboardingView()
+                .foregroundStyle(.bBraun)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
