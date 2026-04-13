@@ -7,10 +7,11 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State private var babyName = ""
+    // MARK: - Properties
+    @StateObject private var viewModel = OnboardingViewModel()
     @FocusState private var isNameFieldFocused: Bool
-    @State private var isOnboardingCompleted: Bool = false
 
+    // MARK: - Body
     var body: some View {
         ZStack {
             Color.bBackground
@@ -26,10 +27,15 @@ struct OnboardingView: View {
                         .font(.title)
                         .fontWeight(.medium)
                     
-                    BorderedTextField(text: $babyName, isFocused: $isNameFieldFocused)
+                    BorderedTextField(
+                        text: $viewModel.babyName,
+                        isFocused: $isNameFieldFocused
+                    )
                         .padding(.horizontal, 40)
                         .onSubmit {
-                            if !babyName.isEmpty { completeOnboarding() }
+                            if viewModel.isNameValid {
+                                viewModel.completeOnboarding()
+                            }
                         }
                     
                     nextButton
@@ -37,28 +43,31 @@ struct OnboardingView: View {
                 Spacer()
             }
         }
-        .fullScreenCover(isPresented: $isOnboardingCompleted){
-            
+        
+        .fullScreenCover(isPresented: $viewModel.isOnboardingCompleted){
+            // MainView()
         }
     }
     
+    // MARK: UI Components
     private var nextButton: some View {
         CircleButton(
             icon: "arrow.right.circle.fill",
             iconSize: 65,
             backgroundColor: .white,
             iconColor: .bBraun,
-            isEnabled: !babyName.isEmpty,
-            action: completeOnboarding,
-            withHaptic: true
+            isEnabled: viewModel.isNameValid,
+            action: {
+                hapticFeedback()
+                viewModel.completeOnboarding()
+            }, withHaptic: true
         )
     }
     
-    private func completeOnboarding() {
+    // MARK: - Actions
+    private func hapticFeedback() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
-        
-        isOnboardingCompleted = true
     }
 }
 
