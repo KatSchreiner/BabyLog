@@ -11,12 +11,21 @@ import CoreData
 @main
 struct BabyLogApp: App {
     let persistenceController = PersistenceController.shared
-
+    @StateObject private var appState = AppState()
+    
     var body: some Scene {
         WindowGroup {
-            OnboardingView()
-                .foregroundStyle(.bBraun)
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            Group {
+                if appState.shouldShowOnboarding {
+                    OnboardingView()
+                } else {
+                    ContentView()
+                }
+            }
+            .environmentObject(appState)
+            .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            .foregroundStyle(.bBraun)
+            
         }
     }
 }

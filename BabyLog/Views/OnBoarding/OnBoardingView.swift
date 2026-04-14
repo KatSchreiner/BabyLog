@@ -8,6 +8,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     // MARK: - Properties
+    @EnvironmentObject var appState: AppState 
     @StateObject private var viewModel = OnboardingViewModel()
     @FocusState private var isNameFieldFocused: Bool
 
@@ -32,15 +33,25 @@ struct OnboardingView: View {
                         isFocused: $isNameFieldFocused
                     )
                         .padding(.horizontal, 40)
+                        .disabled(viewModel.isLoading)
                         .onSubmit {
                             if viewModel.isNameValid {
                                 viewModel.completeOnboarding()
                             }
                         }
+                    if let error = viewModel.errorMessage {
+                        Text(error)
+                            .foregroundColor(.bOrange)
+                            .font(.caption)
+                    }
                     
                     nextButton
                 }
                 Spacer()
+            }
+            if viewModel.isLoading {
+                ProgressView()
+                    .background(Color.bGray.opacity(0.5))
             }
         }
         
@@ -58,16 +69,9 @@ struct OnboardingView: View {
             iconColor: .bBraun,
             isEnabled: viewModel.isNameValid,
             action: {
-                hapticFeedback()
                 viewModel.completeOnboarding()
             }, withHaptic: true
         )
-    }
-    
-    // MARK: - Actions
-    private func hapticFeedback() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
     }
 }
 

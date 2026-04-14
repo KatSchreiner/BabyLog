@@ -15,16 +15,6 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         
-        let newBaby = BabyProfile(context: viewContext)
-        newBaby.babyName = "Малыш"
-        newBaby.idProfile = UUID()
-        
-        do {
-            try viewContext.save()
-        } catch {
-            fatalError("Не удалось сохранить данные: \(error)")
-        }
-        
         return result
     }()
 
